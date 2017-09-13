@@ -1,0 +1,240 @@
+\documentclass{article}
+
+% For UTF8 characters
+\usepackage[utf8]{inputenc}
+
+% For use of images
+\usepackage{graphicx}
+\graphicspath{ {assets/img/} }
+
+% For mathematics
+\usepackage{mathtools}
+%usepackage{amsmath}
+
+% Unused
+%\usepackage[normalem]{ulem}
+
+% For code listings
+\usepackage{listings}
+\lstset{language=Python}
+%\lstinputlisting[language=Python]{script.py}
+
+% For tabbing
+%\newcommand\tab[1][1cm]{\hspace*{#1}}
+\usepackage{tabto}
+\NumTabs{8}
+
+% For framing sections
+\usepackage{mdframed}
+
+
+% Some stuffs??
+% https://www.quora.com/What-is-the-optimal-way-to-include-Python-code-in-a-LaTeX-document
+
+
+
+\begin{document}
+
+\title {Pi Estimation - Programming Problem}
+\author{Paul Sæther Knutson}
+\maketitle
+
+\begin{center}
+\line(1,0){350}
+\end{center}
+
+\hfill
+
+\section{Problem}
+Put a circle inside a square, place (random) dots on the square.
+Use to estimate $\pi$, in some way. \\
+
+\section{Solution}
+Use the probability of random the dots "landing" inside or outside the circle to calculage the area of the circle.
+Find a formula for $\pi$ based on the circle's area, and make a program to estimate the probability, thus estimating the value of $\pi$. \\
+
+\includegraphics[width=4cm, height=4cm]{explenation}
+
+The dots with blue around them lands outside the circle, and estimates the area outside the circle.
+The dots without blue estimates the area inside the circle.
+
+\hfill \\
+
+
+
+\subsection{Maths}
+Here,
+$\prescript{}{}{A}^{}_{c}$
+is the area (A) of the circle (c), and 
+$\prescript{}{}{A}^{}_{s}$
+is the area of the square (s). \\
+
+%$\prescript{}{}{\mathbf{A}}^{}_{c} = \pi r^2$
+$\prescript{}{}{A}^{}_{c} = \pi r^2$
+
+$\prescript{}{}{A}^{}_{s} = (2r)^2$ \\
+
+$\frac { \prescript{}{}{A}^{}_{c} }  { \prescript{}{}{A}^{}_{s} }
+ = 
+\frac
+{ \pi r^2 }
+{ (2r)^2 }
+ =>
+\frac { \pi r^2 }  { 2^2 r^2 }
+ =>
+\frac { \pi r^2 }  { 4 r^2 }
+ =>
+\frac { \pi }  { 4 }
+\frac { r^2 }  { r^2 }
+ =>
+\frac { \pi }  { 4 }$
+
+$\frac { \pi }  { 4 }
+ = 
+\frac { \prescript{}{}{A}^{}_{c} }  { \prescript{}{}{A}^{}_{s} }$ \\
+
+$\pi
+ = 
+\frac { 4\prescript{}{}{A}^{}_{c} }  { \prescript{}{}{A}^{}_{s} }$
+
+\hfill
+
+This gives us that we can get an estimate of $\pi$ by finding
+$4\frac { \prescript{}{}{A}^{}_{c} }  { \prescript{}{}{A}^{}_{s} }$.
+
+In other words: \\ \\
+$4 * \frac { \text{amount of dots landing in the circle} }  { \text{amount of dots landing in the circle + amount of dots landing in the square } }$. \\
+
+Or simply, 4 times the chance a dot will land in the circle.
+
+\hfill
+
+\subsection{Code}
+
+We achieve this by writing the following code in Python 3.5
+
+\begin{mdframed}
+\begin{lstlisting}
+import random
+import math
+\end{lstlisting}
+\end{mdframed}
+Importing "random" to allow for randomly placed dots in my square,
+and "math" to be able to calculate whether the dots are within the circle or not.
+
+\hfill
+
+\begin{mdframed}
+\begin{lstlisting}
+runs	= 1000000
+cir	= 0
+sqr 	= 0
+\end{lstlisting}
+\end{mdframed}
+Here, "runs" is how many times we want the simulation to run.
+"cir" and "sqr" are counters (starting at 0) for how many times the dots land in the circle or ine the square (respectively).
+
+\hfill
+
+\begin{mdframed}
+\begin{lstlisting}
+for i in range (runs):
+\end{lstlisting}
+\end{mdframed}
+Here, we start a loop that runs for the set amount of times.
+
+\begin{mdframed}
+\begin{lstlisting}
+point = [(random.uniform(-1, 1)), (random.uniform(-1, 1))]
+\end{lstlisting}
+\end{mdframed}
+In the loop, we first create a list representing the 2-dimentional point/dot in the space, and assign random values for the axis-values thusly: \\
+$\text{point}(a, b) \\
+a, b \in [-1, 1]$ \\
+with the centre at origo $(0, 0)$ \\
+
+\begin{mdframed}
+\begin{lstlisting}
+r = math.sqrt(point[0]**2 + point[1]**2)
+\end{lstlisting}
+\end{mdframed}
+Next, we find the distance from origo and the dots location, or the radius (polar coordinates).
+We achieve this by using the Pythagorean Theorem: \\
+$a^2 + b^2 = c^2$ \\
+in a triangle, or a coordinate system with normalized axis.
+Solving for the c, or the hypotenuse, gives us: \\
+$c = \sqrt{a^2 + b^2}$ \\
+where a and b is represented in code by point[0] and point[1]. \\
+
+\begin{mdframed}
+\begin{lstlisting}
+if (r > 1):
+        sqr += 1
+    else:
+        cir += 1
+\end{lstlisting}
+\end{mdframed}
+If the value of r, the distance from origo, is larger than 1, then the dot is outside the circle (and would be represented with a blue circle around it. See image).
+If not, it is within the circle.
+
+\hfill
+
+\begin{mdframed}
+\begin{lstlisting}
+pi = 4 * (cir) / (cir + sqr)
+error = abs(math.pi - pi)
+\end{lstlisting}
+\end{mdframed}
+Calculate $\pi$ using our formula, and calculate the absolute error from $\pi$'s real value.
+
+\hfill
+
+\begin{mdframed}
+\begin{lstlisting}
+print ("pi:\t"      + str(pi))
+print ("error:\t"   + str(error))
+print ("runs:\t"    + str(runs))
+print ("cir:\t"     + str(cir))
+print ("sqr:\t"     + str(sqr))
+\end{lstlisting}
+\end{mdframed}
+Finally, print out the results of the runs: \\
+pi	\tab{- Our estimated value of $\pi$} \\
+error	\tab{- Absolute error of our estimation} \\
+runs	\tab{- How many times the simulation ran for} \\
+cir	\tab{- How many times the dots landed inside the circle} \\
+sqr 	\tab{- How many times the dots landed outside the circle} \\
+
+\hfill
+
+The more times the simulation is ran, the better estimation of $\pi$ you get.
+When I ran it 1'000'000, it gave me the following output in 1.776 seconds: \\
+\begin{mdframed}
+pi:	\tab{3.140484}\\
+error:	\tab{0.0011086535897932848}\\
+runs:	\tab{1000000}\\
+cir:	\tab{785121}\\
+sqr:	\tab{214879}\\
+\end{mdframed}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

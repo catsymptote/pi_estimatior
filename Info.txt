@@ -1,0 +1,5 @@
+YouTube: The Map of Mathematics
+	Numerical Analysis
+
+Put a circle inside a square, place (random) dots on the square.
+Use to estimate pi, in some way
