@@ -1,0 +1,15 @@
+coordSize	[8192, 8192]
+lowHighVal	(0.999999761555111, 0.9999999589809851, -0.9999997390932063, -0.9999999385288347)
+File already exist?	True
+[[4096, 4096], [4096, 4096]]
+coordSize	[8192, 8192]
+lowHighVal	(8191, 8191, 0, 0)
+File already exist?	True
+coordSize	[8192, 8192]
+lowHighVal	(8192, 8192, 0, 0)
+File already exist?	True
+pi:	3.1416968
+error:	0.00010414641020695115
+runs:	10000000
+cir:	7854242
+sqr:	2145758

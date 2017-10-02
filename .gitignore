@@ -1,0 +1,13 @@
+*.png
+*.aux
+*.log
+*.gz
+*.toc
+*.pyc
+*.docx
+*.zip
+*.json
+*.pdn
+*.xlsx
+Report/report.tex
+Report/report.pdf
